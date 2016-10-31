@@ -4,6 +4,7 @@ from os.path import exists
 
 import click
 from code_gen.generator import CodeGenerator
+from code_gen.init import InitTemplate
 from code_gen.install import DependencyInstaller
 
 logging.basicConfig(level=logging.DEBUG)
@@ -49,6 +50,20 @@ def install(app_dir):
     try:
         installer = DependencyInstaller(app_dir)
         installer.install()
+        print('Done!')
+    except Exception as e:
+        print(str(e))
+        raise
+
+
+@cli.command(help='Init template')
+@click.argument('template_name')
+@click.option('--app-dir', 'app_dir', default='.', help='Application directory. Default is the current directory')
+def init(template_name, app_dir):
+    print('Init template %s...' % template_name)
+    try:
+        action = InitTemplate(template_name, app_dir)
+        action.execute()
         print('Done!')
     except Exception as e:
         print(str(e))

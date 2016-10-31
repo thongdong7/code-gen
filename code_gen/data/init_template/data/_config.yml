@@ -1,0 +1,4 @@
+# File / folder need to override
+#override:
+#  - path/to/file1
+#  - path/to/folder1
