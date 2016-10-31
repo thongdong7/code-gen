@@ -3,7 +3,7 @@ from os.path import exists, join
 
 from code_gen.generator import CodeGenerator
 from code_gen.utils import io_utils
-from tests_code_gen.bootstrap import get_test_dir
+from .bootstrap import get_data_dir
 
 __author__ = 'johnsmith'
 import logging
@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 class GeneratorTestCase(unittest.TestCase):
     def test_01(self):
-        d = get_test_dir('test01_template')
+        d = get_data_dir('test01_template')
         output_dir = '/tmp/test-code-gen'
         if not exists(output_dir):
             makedirs(output_dir)

@@ -5,7 +5,7 @@ from pprint import pprint
 
 from code_gen.model.template import Template
 from code_gen.provider.template import TemplateProvider
-from tests_code_gen.bootstrap import get_test_dir
+from .bootstrap import get_data_dir
 
 __author__ = 'hiepsimu'
 
@@ -14,15 +14,15 @@ logging.basicConfig(level=logging.DEBUG)
 
 class TemplateTestCase(unittest.TestCase):
     def test_01(self):
-        d = get_test_dir('test01_template/.code-gen/t1')
+        d = get_data_dir('test01_template/.code-gen/t1')
         t = Template(d)
         self.assertEqual(3, len(t.config.override))
         self.assertIn('a', t.parameters)
         self.assertIn('b', t.parameters)
 
     def test_02_merge(self):
-        d1 = get_test_dir('test01_template/.code-gen/t1')
-        d2 = get_test_dir('test01_template/.code-gen/t2')
+        d1 = get_data_dir('test01_template/.code-gen/t1')
+        d2 = get_data_dir('test01_template/.code-gen/t2')
         t1 = Template(d1)
         t2 = Template(d2)
 
@@ -41,7 +41,7 @@ class TemplateTestCase(unittest.TestCase):
         # print(t1.path)
 
     def test_03_template_provider(self):
-        d = get_test_dir('test01_template')
+        d = get_data_dir('test01_template')
         template_provider = TemplateProvider()
         t = template_provider.get(d)
 
