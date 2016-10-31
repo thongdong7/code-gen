@@ -4,6 +4,7 @@ import unittest
 from pprint import pprint
 
 from code_gen.model.template import Template
+from code_gen.provider.template import TemplateProvider
 from tests_code_gen.bootstrap import get_test_dir
 
 __author__ = 'hiepsimu'
@@ -36,7 +37,17 @@ class TemplateTestCase(unittest.TestCase):
         self.assertEqual(2, t1.parameters['b'])
         self.assertEqual(3, t1.parameters['c'])
 
+        self.assertEqual(2, len(t1.path))
+        # print(t1.path)
 
+    def test_03_template_provider(self):
+        d = get_test_dir('test01_template')
+        template_provider = TemplateProvider()
+        t = template_provider.get(d)
+
+        self.assertEqual(6, len(t.config.override))
+        self.assertEqual(2, t.parameters['a'])
+        self.assertEqual(2, len(t.path))
 
 
 if __name__ == '__main__':

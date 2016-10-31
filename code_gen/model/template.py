@@ -1,22 +1,31 @@
 # encoding=utf-8
-from os.path import join
+from os.path import join, exists
 
 from code_gen.utils import yaml_utils
 
 
 class Template(object):
-    def __init__(self, path):
-        data_dir = join(path, 'data')
-        config_file = join(data_dir, '_config.yml')
+    def __init__(self, path=None):
+        if path:
+            data_dir = join(path, 'data')
+            config_file = join(data_dir, '_config.yml')
 
-        self.config = TemplateConfig(yaml_utils.load(config_file))
-        self.parameters = yaml_utils.load_dir(data_dir)
+            if exists(config_file):
+                self.config = TemplateConfig(yaml_utils.load(config_file))
+            else:
+                self.config = TemplateConfig({})
 
-        self.path = path
+            self.parameters = yaml_utils.load_dir(data_dir)
+            self.path = [path]
+        else:
+            self.config = TemplateConfig({})
+            self.parameters = {}
+            self.path = []
 
     def merge(self, template):
         self.config.merge(template.config)
         self.parameters.update(template.parameters)
+        self.path += template.path
 
 
 class TemplateConfig(object):
@@ -25,7 +34,7 @@ class TemplateConfig(object):
     def __init__(self, data):
         self.data = data
 
-        assert 'override' in data or isinstance(data['override'], list)
+        assert 'override' not in data or isinstance(data['override'], list)
 
     @property
     def override(self):
