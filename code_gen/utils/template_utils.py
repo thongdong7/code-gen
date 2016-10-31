@@ -85,7 +85,8 @@ def generate_content(template_file_path, params):
     }
 
     try:
-        return env.from_string(template_content).render(**params, **extra_params)
+        extra_params.update(params)
+        return env.from_string(template_content).render(**extra_params)
     except TemplateSyntaxError as e:
         raise GenerateError(template_file_path, str(e))
 
@@ -158,25 +159,6 @@ class TemplateGenerator(object):
 def generate_all(template_dir, output_dir):
     template_generator = TemplateGenerator(template_dir, output_dir)
     template_generator.generate()
-    # params = load_data(join(template_dir, 'data'))
-    #
-    # # Generate master
-    # generate(join(template_dir, 'master'),
-    #          params,
-    #          output_dir=output_dir, override=True)
-    #
-    # # Generate item
-    # for item_name in params:
-    #     item_dir = join(template_dir, 'items', item_name)
-    #     if exists(item_dir):
-    #         print('generate', item_name)
-    #         for item_config in params[item_name]:
-    #             item_params = copy(item_config)
-    #             item_params['params'] = params
-    #
-    #             generate(template_dir=item_dir,
-    #                      params=item_params,
-    #                      output_dir=output_dir, override=False)
 
 
 if __name__ == '__main__':

@@ -1,13 +1,31 @@
 # encoding=utf-8
-from code_gen.model.template import Template
+from os.path import join, exists
+
+from code_gen.provider.template import TemplateProvider
+from code_gen.utils.template_utils import generate
 
 
 class CodeGenerator(object):
-    def __init__(self):
-        self.master_template = Template()
+    def __init__(self, path, output_dir):
+        self.template = TemplateProvider().get(path)
+        self.output_dir = output_dir
 
-    def add(self, template):
-        self.master_template.merge(template)
+        #
 
     def generate(self):
-        pass
+        params = self.template.parameters
+
+        # Generate master
+        self._generate_master(params)
+        # generate(join(self.template_dir, 'master'),
+        #          params,
+        #          output_dir=self.output_dir, override=config.get('override'))
+
+    def _generate_master(self, params):
+        for path in self.template.paths:
+            template_dir = join(path, 'master')
+            if not exists(template_dir):
+                continue
+
+            generate(template_dir=template_dir, params=params, output_dir=self.output_dir,
+                     override=self.template.config.override)

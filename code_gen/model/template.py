@@ -16,16 +16,16 @@ class Template(object):
                 self.config = TemplateConfig({})
 
             self.parameters = yaml_utils.load_dir(data_dir)
-            self.path = [path]
+            self.paths = [path]
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
-            self.path = []
+            self.paths = []
 
     def merge(self, template):
         self.config.merge(template.config)
         self.parameters.update(template.parameters)
-        self.path += template.path
+        self.paths += template.paths
 
 
 class TemplateConfig(object):

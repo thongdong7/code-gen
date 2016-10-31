@@ -37,7 +37,7 @@ class TemplateTestCase(unittest.TestCase):
         self.assertEqual(2, t1.parameters['b'])
         self.assertEqual(3, t1.parameters['c'])
 
-        self.assertEqual(2, len(t1.path))
+        self.assertEqual(2, len(t1.paths))
         # print(t1.path)
 
     def test_03_template_provider(self):
@@ -47,7 +47,7 @@ class TemplateTestCase(unittest.TestCase):
 
         self.assertEqual(6, len(t.config.override))
         self.assertEqual(2, t.parameters['a'])
-        self.assertEqual(2, len(t.path))
+        self.assertEqual(2, len(t.paths))
 
 
 if __name__ == '__main__':
