@@ -20,7 +20,7 @@ class TemplateProvider(object):
 
         template = Template()
         for dependency in package_config.dependencies:
-            dependency_path = join(path, '.code-gen', dependency)
+            dependency_path = join(path, '.code-gen', dependency.name)
             if not exists(dependency_path):
                 raise InvalidCodeGenDependencyError(dependency, dependency_path)
             dependency_template = Template(dependency_path)
