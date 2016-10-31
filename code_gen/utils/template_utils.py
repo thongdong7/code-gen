@@ -7,6 +7,7 @@ from os.path import join, relpath, dirname, exists, abspath, basename, splitext
 
 import yaml
 from code_gen.utils.transform_utils import transform
+from code_gen.utils.yaml_utils import load_dir
 from jinja2 import Environment
 from jinja2.exceptions import UndefinedError, TemplateSyntaxError
 
@@ -19,21 +20,6 @@ def to_json(value):
 
 
 env.filters['tojson'] = to_json
-
-
-def load_data(path):
-    ret = {}
-    for root, subdirs, files in walk(path):
-        for file_name in files:
-            if file_name.startswith('_') or not file_name.endswith('.yml'):
-                # Ignore _file and not yaml file
-                continue
-
-            template_path = join(root, file_name)
-            data = yaml.load(open(template_path))
-            ret.update(data)
-
-    return ret
 
 
 class GenerateError(Exception):
@@ -155,7 +141,7 @@ class TemplateGenerator(object):
                              output_dir=self.output_dir, override=config.get('override'))
 
     def _load_params(self):
-        return load_data(join(self.template_dir, 'data'))
+        return load_dir(join(self.template_dir, 'data'))
 
     def _load_config(self):
         code_gen_config_file = join(self.template_dir, 'data/_config.yml')
