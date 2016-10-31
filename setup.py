@@ -14,6 +14,7 @@ setup(
         'pyyaml',
         'click==6.6',
         'jinja2==2.8',
+        'pyfunctional==0.8.0',
     ],
     # extras_require={
     #     'cli': [
