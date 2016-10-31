@@ -17,9 +17,8 @@ class CodeGenerator(object):
 
         # Generate master
         self._generate_master(params)
-        # generate(join(self.template_dir, 'master'),
-        #          params,
-        #          output_dir=self.output_dir, override=config.get('override'))
+
+        # TODO Generate items
 
     def _generate_master(self, params):
         for path in self.template.paths:

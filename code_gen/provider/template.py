@@ -1,30 +1,9 @@
 # encoding=utf-8
 from os.path import join, exists
 
+from code_gen.exception.package_config import InvalidCodeGenDependencyError
 from code_gen.model.template import Template
-from code_gen.utils import yaml_utils
-
-
-class MissPackageFileError(Exception):
-    def __str__(self):
-        path, = self.args
-        return 'Could not find file `.code-gen.yml` at {0}' \
-            .format(path)
-
-
-class PackageConfig(object):
-    def __init__(self, data):
-        self.data = data
-
-    @property
-    def dependencies(self):
-        return self.data.get('dependencies', [])
-
-
-class InvalidCodeGenDependencyError(Exception):
-    def __str__(self):
-        dependency, path = self.args
-        return "Could not find dependency {0} at folder {1}".format(dependency, path)
+from code_gen.utils import package_config_utils
 
 
 class TemplateProvider(object):
@@ -37,12 +16,7 @@ class TemplateProvider(object):
         :return:
         :rtype:
         """
-        package_file = join(path, '.code-gen.yml')
-        if not exists(package_file):
-            raise MissPackageFileError(path)
-
-        package_config_data = yaml_utils.load(package_file)
-        package_config = PackageConfig(package_config_data)
+        package_config = package_config_utils.load(path)
 
         template = Template()
         for dependency in package_config.dependencies:
