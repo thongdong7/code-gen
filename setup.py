@@ -13,6 +13,7 @@ setup(
     install_requires=[
         'pyyaml',
         'click==6.6',
+        'jinja2',
     ],
     # extras_require={
     #     'cli': [
