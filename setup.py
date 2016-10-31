@@ -23,7 +23,7 @@ setup(
     # },
     entry_points={
         'console_scripts': [
-            'code-gen=code_gen.scripts:code_gen',
+            'code-gen=code_gen.scripts:cli',
         ],
     },
     include_package_data=True,
