@@ -13,6 +13,7 @@ RUN set -ex; \
         ca-certificates \
         curl \
         libsqlite3-dev \
+        upx-ucl \
     ; \
     rm -rf /var/lib/apt/lists/*
 
