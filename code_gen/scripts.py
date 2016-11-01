@@ -6,6 +6,7 @@ import click
 from code_gen.generator import CodeGenerator
 from code_gen.init import InitTemplate
 from code_gen.install import DependencyInstaller
+from code_gen.utils.cli_utils import print_exception
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -39,8 +40,7 @@ def cli(ctx, app_dir, watch):
             generator.generate(watch=watch)
             print('Done!')
         except Exception as e:
-            print(str(e))
-            raise
+            print_exception(e)
 
 
 @cli.command(help='Install dependencies')
@@ -52,8 +52,7 @@ def install(app_dir):
         installer.install()
         print('Done!')
     except Exception as e:
-        print(str(e))
-        raise
+        print_exception(e)
 
 
 @cli.command(help='Init template')
@@ -66,8 +65,7 @@ def init(template_name, app_dir):
         action.execute()
         print('Done!')
     except Exception as e:
-        print(str(e))
-        raise
+        print_exception(e)
 
 # @click.command(help='Generate')
 # @click.option('--app-dir', 'app_dir', default='.', help='Application directory. Default is the current directory')
