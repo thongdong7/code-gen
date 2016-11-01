@@ -1,0 +1,11 @@
+version: '2'
+services:
+  builder:
+    build: docker
+    volumes:
+      - ./bin:/code/bin:ro
+      - ./code_gen:/code/code_gen:ro
+      - ./setup.py:/code/setup.py:ro
+      - ./docker/entry.sh:/code/entry.sh:ro
+      - ./code-gen.spec:/code/code-gen.spec:ro
+      - ./dist:/code/dist
