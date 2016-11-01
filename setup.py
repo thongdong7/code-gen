@@ -15,6 +15,7 @@ setup(
         'click==6.6',
         'jinja2==2.8',
         'pyfunctional==0.8.0',
+        'tornado==4.4.2',
     ],
     # extras_require={
     #     'cli': [
