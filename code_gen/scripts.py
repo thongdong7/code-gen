@@ -30,13 +30,13 @@ def get_generator(app_dir):
 @click.group(invoke_without_command=True)
 @click.pass_context
 @click.option('--app-dir', 'app_dir', default='.', help='Application directory. Default is the current directory')
-def cli(ctx, app_dir):
+@click.option('--watch', '-w', 'watch', is_flag=True, help='Run as daemon')
+def cli(ctx, app_dir, watch):
     if ctx.invoked_subcommand is None:
         # Generate
-        print('Generating...')
         try:
             generator = get_generator(app_dir)
-            generator.generate()
+            generator.generate(watch=watch)
             print('Done!')
         except Exception as e:
             print(str(e))

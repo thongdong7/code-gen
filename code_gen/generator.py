@@ -1,8 +1,10 @@
 # encoding=utf-8
 from os.path import join, exists
 
+from code_gen.monitor import FileMonitor, FileMonitorPool
 from code_gen.provider.template import TemplateProvider
 from code_gen.utils.template_utils import generate
+from tornado.gen import sleep
 
 
 class CodeGenerator(object):
@@ -12,17 +14,38 @@ class CodeGenerator(object):
 
         #
 
-    def generate(self):
+    def generate(self, watch=False):
+        self._generate()
+
+        if watch:
+            file_monitor = FileMonitor(self._on_change)
+            # print('Watch folders', self.template.paths)
+            file_monitor.watch_multiple(self.template.paths)
+
+            pool = FileMonitorPool()
+            pool.add_file_monitor(file_monitor)
+            pool.start()
+
+            while True:
+                sleep(1000)
+
+    def _on_change(self, path):
+        print('%s changed' % path)
+        self._generate()
+
+    def _generate(self):
+        print('Generating...')
         params = self.template.parameters
 
         # Generate master
         self._generate_master(params)
 
         # TODO Generate items
+        print('Done!')
 
     def _generate_master(self, params):
         for path in self.template.paths:
-            print('Generate from %s' % path)
+            print('  > %s' % path)
             template_dir = join(path, 'master')
             if not exists(template_dir):
                 continue
