@@ -32,9 +32,12 @@ class TemplateConfig(object):
     list_fields = ['override']
 
     def __init__(self, data):
-        self.data = data
+        if not data:
+            self.data = {}
+        else:
+            self.data = data
 
-        assert 'override' not in data or isinstance(data['override'], list)
+        assert 'override' not in self.data or isinstance(self.data['override'], list)
 
     @property
     def override(self):

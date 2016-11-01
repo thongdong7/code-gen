@@ -22,6 +22,7 @@ class CodeGenerator(object):
 
     def _generate_master(self, params):
         for path in self.template.paths:
+            print('Generate from %s' % path)
             template_dir = join(path, 'master')
             if not exists(template_dir):
                 continue
