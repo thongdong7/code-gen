@@ -32,7 +32,8 @@ def get_generator(app_dir):
 @click.pass_context
 @click.option('--app-dir', 'app_dir', default='.', help='Application directory. Default is the current directory')
 @click.option('--watch', '-w', 'watch', is_flag=True, help='Run as daemon')
-def cli(ctx, app_dir, watch):
+@click.option('--debug', 'debug', is_flag=True, help='Debug')
+def cli(ctx, app_dir, watch, debug):
     if ctx.invoked_subcommand is None:
         # Generate
         try:
@@ -40,7 +41,7 @@ def cli(ctx, app_dir, watch):
             generator.generate(watch=watch)
             print('Done!')
         except Exception as e:
-            print_exception(e)
+            print_exception(e, debug=debug)
 
 
 @cli.command(help='Install dependencies')

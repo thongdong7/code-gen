@@ -27,6 +27,7 @@ def load_dir(path):
 
             template_path = join(root, file_name)
             data = yaml.load(open(template_path))
-            ret.update(data)
+            if data:
+                ret.update(data)
 
     return ret
