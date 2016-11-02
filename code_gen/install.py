@@ -1,10 +1,9 @@
 import shlex
-from os import makedirs, symlink, unlink
-
 import subprocess
-from code_gen.exception.package_config import InvalidCodeGenDependencyError
-from code_gen.utils import package_config_utils
+from os import makedirs, symlink, unlink
 from os.path import join, exists, pardir, abspath
+
+from code_gen.utils import package_config_utils
 
 
 class InvalidDependencyError(Exception):
@@ -48,8 +47,13 @@ class DependencyInstaller(object):
                 self._install_from_git(dependency)
             elif self._in_workspace(dependency):
                 self._install_from_workspace(dependency)
+            elif self._in_code_gen(dependency):
+                print('Ignore')
             else:
                 raise InvalidDependencyError(dependency)
+
+    def _in_code_gen(self, dependency):
+        return exists(join(self.install_dir, dependency.name))
 
     def _in_workspace(self, dependency):
         return exists(self._get_dependency_source(dependency))
