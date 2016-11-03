@@ -1,3 +1,4 @@
+import shutil
 from os import makedirs
 from os.path import exists, join
 
@@ -18,6 +19,8 @@ class GeneratorTestCase(unittest.TestCase):
         output_dir = '/tmp/test-code-gen'
         if not exists(output_dir):
             makedirs(output_dir)
+        else:
+            shutil.rmtree(output_dir)
 
         generator = CodeGenerator(d, output_dir)
         generator.generate()
@@ -29,6 +32,9 @@ class GeneratorTestCase(unittest.TestCase):
         abc_content = io_utils.get_content(join(output_dir, 'abc.txt'))
         # print(content)
         self.assertEqual('a is 2. b is 2. c is 3', abc_content)
+
+        lib_content = io_utils.get_content(join(output_dir, 'lib.txt'))
+        print('lib content', lib_content)
 
 
 if __name__ == '__main__':

@@ -3,6 +3,7 @@ from os.path import join, exists
 
 from code_gen.monitor import FileMonitor, FileMonitorPool
 from code_gen.provider.template import TemplateProvider
+from code_gen.renderer import Renderer
 from code_gen.utils.template_utils import generate
 from tornado.gen import sleep
 
@@ -13,6 +14,7 @@ class CodeGenerator(object):
         self.output_dir = output_dir
 
         #
+        self.renderer = Renderer()
 
     def generate(self, watch=False):
         self._generate()

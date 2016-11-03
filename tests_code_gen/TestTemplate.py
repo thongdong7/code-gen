@@ -20,6 +20,8 @@ class TemplateTestCase(unittest.TestCase):
         self.assertIn('a', t.parameters)
         self.assertIn('b', t.parameters)
 
+        self.assertIn('lib_name', t.macros)
+
     def test_02_merge(self):
         d1 = get_data_dir('test01_template/.code-gen/t1')
         d2 = get_data_dir('test01_template/.code-gen/t2')
@@ -39,6 +41,8 @@ class TemplateTestCase(unittest.TestCase):
 
         self.assertEqual(2, len(t1.paths))
         # print(t1.path)
+
+        self.assertIn('lib_name', t1.macros)
 
     def test_03_template_provider(self):
         d = get_data_dir('test01_template')

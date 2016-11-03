@@ -1,4 +1,5 @@
 # encoding=utf-8
+import imp
 from os.path import join, exists
 
 from code_gen.utils import yaml_utils
@@ -6,6 +7,7 @@ from code_gen.utils import yaml_utils
 
 class Template(object):
     def __init__(self, path=None):
+        self.macros = {}
         if path:
             data_dir = join(path, 'data')
             config_file = join(data_dir, '_config.yml')
@@ -17,6 +19,10 @@ class Template(object):
 
             self.parameters = yaml_utils.load_dir(data_dir)
             self.paths = [path]
+
+            macro_file = join(path, 'template.py')
+            if exists(macro_file):
+                self.macros = self._load_macros(macro_file)
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
@@ -26,6 +32,11 @@ class Template(object):
         self.config.merge(template.config)
         self.parameters.update(template.parameters)
         self.paths += template.paths
+        self.macros.update(template.macros)
+
+    def _load_macros(self, macro_file):
+        macro = imp.load_source('macro', macro_file)
+        return macro.exports
 
 
 class TemplateConfig(object):
