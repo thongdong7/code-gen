@@ -3,6 +3,7 @@ import subprocess
 from os import makedirs, symlink, unlink
 from os.path import join, exists, pardir, abspath
 
+from code_gen.init import generate_template_structure
 from code_gen.utils import package_config_utils
 
 
@@ -51,6 +52,9 @@ class DependencyInstaller(object):
                 print('Ignore')
             else:
                 raise InvalidDependencyError(dependency)
+
+        # Create template folder
+        generate_template_structure(self.path)
 
     def _in_code_gen(self, dependency):
         return exists(join(self.install_dir, dependency.name))

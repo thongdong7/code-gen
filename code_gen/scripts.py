@@ -46,14 +46,15 @@ def cli(ctx, app_dir, watch, debug):
 
 @cli.command(help='Install dependencies')
 @click.option('--app-dir', 'app_dir', default='.', help='Application directory. Default is the current directory')
-def install(app_dir):
+@click.option('--debug', 'debug', is_flag=True, help='Debug')
+def install(app_dir, debug):
     print('Installing...')
     try:
         installer = DependencyInstaller(app_dir)
         installer.install()
         print('Done!')
     except Exception as e:
-        print_exception(e)
+        print_exception(e, debug=debug)
 
 
 @cli.command(help='Init template')

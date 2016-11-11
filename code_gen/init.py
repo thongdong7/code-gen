@@ -1,8 +1,24 @@
 # encoding=utf-8
 import shutil
-from os.path import pardir, join, dirname, abspath, exists
-
 from os import makedirs
+from os.path import join, dirname, abspath, exists
+
+
+def generate_template_structure(project_dir):
+    project_template_dir = abspath(join(project_dir, 'template'))
+    # print('ptd', project_template_dir)
+    if exists(project_template_dir):
+        return
+
+    current_folder = abspath(dirname(__file__))
+    template_folder = join(current_folder, 'data/init_template')
+    # print('template folder', template_folder)
+
+    shutil.copytree(template_folder, project_template_dir)
+
+    master_dir = join(project_template_dir, 'master')
+    if not exists(master_dir):
+        makedirs(master_dir)
 
 
 class InitTemplate(object):
@@ -24,8 +40,5 @@ class InitTemplate(object):
             print('%s existed' % self.template_name)
             return
 
-        shutil.copytree(self._template_folder, template_dir)
-        master_dir = join(template_dir, 'master')
-        if not exists(master_dir):
-            makedirs(master_dir)
+        generate_template_structure(template_dir)
 

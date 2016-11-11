@@ -1,5 +1,5 @@
 # encoding=utf-8
-from os.path import join, exists
+from os.path import join, exists, abspath
 
 from code_gen.monitor import FileMonitor, FileMonitorPool
 from code_gen.provider.template import TemplateProvider
@@ -10,6 +10,7 @@ from tornado.gen import sleep
 
 class CodeGenerator(object):
     def __init__(self, path, output_dir):
+        self.path = abspath(path)
         self.template = TemplateProvider().get(path)
         self.output_dir = output_dir
 
@@ -21,7 +22,7 @@ class CodeGenerator(object):
 
         if watch:
             file_monitor = FileMonitor(self._on_change)
-            # print('Watch folders', self.template.paths)
+            print('Watch folders', self.template.paths)
             file_monitor.watch_multiple(self.template.paths)
 
             pool = FileMonitorPool()
@@ -37,6 +38,10 @@ class CodeGenerator(object):
 
     def _generate(self):
         print('Generating...')
+        # Reload parameters
+        self.template = TemplateProvider().get(self.path)
+
+        # TODO Check changed path to decide to reload parameters or not
         params = self.template.parameters
 
         # Generate master
