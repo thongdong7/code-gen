@@ -1,11 +1,13 @@
 # encoding=utf-8
+from copy import copy
 from os.path import join, exists, abspath
+
+from tornado.gen import sleep
 
 from code_gen.monitor import FileMonitor, FileMonitorPool
 from code_gen.provider.template import TemplateProvider
 from code_gen.renderer import Renderer
 from code_gen.utils.template_utils import generate
-from tornado.gen import sleep
 
 
 class CodeGenerator(object):
@@ -46,6 +48,20 @@ class CodeGenerator(object):
 
         # Generate master
         self._generate_master(params)
+
+        # Generate item
+        for item_name in params:
+            for path in self.template.paths:
+                item_dir = join(path, 'items', item_name)
+                if exists(item_dir):
+                    for item_config in params[item_name]:
+                        item_params = copy(item_config)
+                        item_params['params'] = params
+
+                        generate(template_dir=item_dir,
+                                 params=item_params,
+                                 output_dir=self.output_dir,
+                                 override=self.template.config.override)
 
         # TODO Generate items
         print('Done!')
