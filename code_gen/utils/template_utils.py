@@ -26,9 +26,11 @@ class GenerateError(Exception):
     pass
 
 
-def generate(template_dir, params, output_dir, override=False):
+def generate(template_dir, params, output_dir, override=False, engine=None):
     for root, subdirs, files in walk(template_dir):
         relative_root_dir = relpath(root, template_dir)
+        if relative_root_dir == '.':
+            relative_root_dir = ''
         # print(relative_root_dir, root, subdirs, files)
         for file_name in files:
             template_path = join(root, file_name)
@@ -47,7 +49,7 @@ def generate(template_dir, params, output_dir, override=False):
                 makedirs(tmp_output_dir)
 
             try:
-                content = generate_content(template_path, params)
+                content = generate_content(template_path, params, engine=engine)
             except UndefinedError as e:
                 logging.warning('%s: %s' % (template_path, str(e)))
                 continue
@@ -62,7 +64,10 @@ generated_file_note_map = {
 }
 
 
-def generate_content(template_file_path, params):
+def generate_content(template_file_path, params, engine=None):
+    if engine is None:
+        engine = env.from_string
+
     template_content = open(template_file_path).read()
     current_file_name = basename(template_file_path)
     _, current_file_extension = splitext(template_file_path)
@@ -86,7 +91,13 @@ def generate_content(template_file_path, params):
 
     try:
         extra_params.update(params)
-        return env.from_string(template_content).render(**extra_params)
+
+        if engine is None:
+            logging.warning('Deprecated: must provide `engine` for generate_content()')
+            return env.from_string(template_content).render(**extra_params)
+        else:
+            return engine.render(template_content, **extra_params)
+
     except TemplateSyntaxError as e:
         raise GenerateError(template_file_path, str(e))
 

@@ -7,6 +7,7 @@ from tornado.gen import sleep
 from code_gen.monitor import FileMonitor, FileMonitorPool
 from code_gen.provider.template import TemplateProvider
 from code_gen.renderer import Renderer
+from code_gen.template_engine import TemplateEngine
 from code_gen.utils.template_utils import generate
 
 
@@ -46,8 +47,10 @@ class CodeGenerator(object):
         # TODO Check changed path to decide to reload parameters or not
         params = self.template.parameters
 
+        engine = TemplateEngine(self.template)
+
         # Generate master
-        self._generate_master(params)
+        self._generate_master(engine, params)
 
         # Generate item
         for item_name in params:
@@ -61,12 +64,14 @@ class CodeGenerator(object):
                         generate(template_dir=item_dir,
                                  params=item_params,
                                  output_dir=self.output_dir,
-                                 override=self.template.config.override)
+                                 override=self.template.config.override,
+                                 engine=engine)
 
         # TODO Generate items
         print('Done!')
 
-    def _generate_master(self, params):
+    def _generate_master(self, engine, params):
+
         for path in self.template.paths:
             print('  > %s' % path)
             template_dir = join(path, 'master')
@@ -74,4 +79,4 @@ class CodeGenerator(object):
                 continue
 
             generate(template_dir=template_dir, params=params, output_dir=self.output_dir,
-                     override=self.template.config.override)
+                     override=self.template.config.override, engine=engine)
