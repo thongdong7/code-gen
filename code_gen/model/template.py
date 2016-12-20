@@ -9,6 +9,7 @@ class Template(object):
     def __init__(self, path=None):
         self.filters = {}
         self.vars_decor = {}
+        self.install = None
         if path:
             data_dir = join(path, 'data')
             config_file = join(data_dir, '_config.yml')
@@ -23,7 +24,7 @@ class Template(object):
 
             macro_file = join(path, 'template.py')
             if exists(macro_file):
-                self.filters, self.vars_decor = self._load_macros(macro_file)
+                self.install, self.filters, self.vars_decor = self._load_macros(macro_file)
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
@@ -38,10 +39,11 @@ class Template(object):
 
     def _load_macros(self, macro_file):
         macro = imp.load_source('macro', macro_file)
+        install = getattr(macro, '_install', None)
         filters = getattr(macro, 'filters', {})
         vars_decor = getattr(macro, 'vars_decor', {})
 
-        return filters, vars_decor
+        return install, filters, vars_decor
 
 
 class TemplateConfig(object):

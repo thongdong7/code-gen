@@ -4,7 +4,11 @@ from os import makedirs, symlink, unlink
 from os.path import join, exists, pardir, abspath
 
 from code_gen.init import generate_template_structure
+from code_gen.model.template import Template
+from code_gen.provider.template import TemplateProvider
+from code_gen.template_engine import TemplateEngine
 from code_gen.utils import package_config_utils
+from code_gen.utils import yaml_utils
 from code_gen.utils.package_config_utils import get_install_dir
 
 
@@ -39,6 +43,9 @@ class DependencyInstaller(object):
         if not exists(self.install_dir):
             makedirs(self.install_dir)
 
+        # Create template folder
+        generate_template_structure(self.path)
+
         for dependency in package_config.dependencies:
             print('Install dependency %s...' % dependency)
 
@@ -51,8 +58,26 @@ class DependencyInstaller(object):
             else:
                 raise InvalidDependencyError(dependency)
 
-        # Create template folder
-        generate_template_structure(self.path)
+            dependency_install_dir = join(self.install_dir, dependency.name)
+
+            template = Template(dependency_install_dir)
+
+            engine = TemplateEngine(template, project_dir=self.path)
+
+            # Load _install() method of dependency if any
+            if template.install:
+                ret = template.install(engine.default_params)
+                print(ret)
+
+                self._build_data(dependency, ret)
+
+    def _build_data(self, dependency, ret):
+        data = ret.get('data')
+        if data:
+            dependency_data_file = join(self.path, 'template/data', dependency.name + '.yml')
+            print(dependency_data_file)
+
+            yaml_utils.write(dependency_data_file, data)
 
     def _in_code_gen(self, dependency):
         return exists(join(self.install_dir, dependency.name))

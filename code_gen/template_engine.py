@@ -36,5 +36,9 @@ class TemplateEngine(object):
         # print('macros', template.filters)
         # print('lib_name', self.render('{{lib_name}}', abc='a-b-c'))
 
+    @property
+    def default_params(self):
+        return self.env.globals
+
     def render(self, content, **params):
         return self.env.from_string(content).render(**params)

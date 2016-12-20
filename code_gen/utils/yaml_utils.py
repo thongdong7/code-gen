@@ -31,3 +31,8 @@ def load_dir(path):
                 ret.update(data)
 
     return ret
+
+
+def write(path, data):
+    with open(path, 'w') as f:
+        f.write(yaml.dump(data))
