@@ -5,6 +5,7 @@ from os.path import join, exists, pardir, abspath
 
 from code_gen.init import generate_template_structure
 from code_gen.utils import package_config_utils
+from code_gen.utils.package_config_utils import get_install_dir
 
 
 class InvalidDependencyError(Exception):
@@ -18,14 +19,11 @@ class InvalidDependencyError(Exception):
 class DependencyInstaller(object):
     def __init__(self, path):
         self.path = path
+        self.install_dir = get_install_dir(path)
 
     @property
     def workspace_dir(self):
         return abspath(join(self.path, pardir))
-
-    @property
-    def install_dir(self):
-        return abspath(join(self.path, '.code-gen'))
 
     def install(self):
         """

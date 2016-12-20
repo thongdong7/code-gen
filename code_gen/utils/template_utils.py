@@ -37,7 +37,11 @@ def generate(template_dir, params, output_dir, override=False, engine=None):
             output_template_path = join(output_dir, relative_root_dir, file_name)
             # print(output_template_path)
 
-            output_path = env.from_string(output_template_path).render(**params)
+            if not engine:
+                logging.warning('Need to provide `enginer')
+                output_path = env.from_string(output_template_path).render(**params)
+            else:
+                output_path = engine.render(output_template_path, **params)
             # print(output_path)
 
             if exists(output_path) and not _could_override([output_template_path, output_path], override):

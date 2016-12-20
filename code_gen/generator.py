@@ -12,9 +12,9 @@ from code_gen.utils.template_utils import generate
 
 
 class CodeGenerator(object):
-    def __init__(self, path, output_dir):
-        self.path = abspath(path)
-        self.template = TemplateProvider().get(path)
+    def __init__(self, project_dir, output_dir):
+        self.project_dir = abspath(project_dir)
+        self.template = TemplateProvider().get(project_dir)
         self.output_dir = output_dir
 
         #
@@ -42,12 +42,12 @@ class CodeGenerator(object):
     def _generate(self):
         print('Generating...')
         # Reload parameters
-        self.template = TemplateProvider().get(self.path)
+        self.template = TemplateProvider().get(self.project_dir)
 
         # TODO Check changed path to decide to reload parameters or not
         params = self.template.parameters
 
-        engine = TemplateEngine(self.template)
+        engine = TemplateEngine(self.template, project_dir=self.project_dir)
 
         # Generate master
         self._generate_master(engine, params)

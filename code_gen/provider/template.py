@@ -4,6 +4,7 @@ from os.path import join, exists
 from code_gen.exception.package_config import InvalidCodeGenDependencyError
 from code_gen.model.template import Template
 from code_gen.utils import package_config_utils
+from code_gen.utils.package_config_utils import get_install_dir
 
 
 class TemplateProvider(object):
@@ -19,8 +20,10 @@ class TemplateProvider(object):
         package_config = package_config_utils.load(path)
 
         template = Template()
+        install_dir = get_install_dir(project_dir=path)
+
         for dependency in package_config.dependencies:
-            dependency_path = join(path, '.code-gen', dependency.name)
+            dependency_path = join(install_dir, dependency.name)
             if not exists(dependency_path):
                 raise InvalidCodeGenDependencyError(dependency, dependency_path)
             dependency_template = Template(dependency_path)

@@ -1,4 +1,4 @@
-from os.path import join, exists
+from os.path import join, exists, expanduser, abspath
 
 from code_gen.exception.package_config import MissPackageFileError
 from code_gen.model.package_config import PackageConfig
@@ -12,3 +12,10 @@ def load(path):
 
     package_config_data = yaml_utils.load(package_file)
     return PackageConfig(package_config_data)
+
+
+home_dir = expanduser("~")
+
+
+def get_install_dir(project_dir):
+    return abspath(join(home_dir, '.code-gen'))

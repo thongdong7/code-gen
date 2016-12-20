@@ -1,6 +1,6 @@
-def lib_name():
+def lib_name(params):
     return "Hello"
 
-exports = {
+vars_decor = {
     'lib_name': lib_name,
 }

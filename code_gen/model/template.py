@@ -7,7 +7,8 @@ from code_gen.utils import yaml_utils
 
 class Template(object):
     def __init__(self, path=None):
-        self.macros = {}
+        self.filters = {}
+        self.vars_decor = {}
         if path:
             data_dir = join(path, 'data')
             config_file = join(data_dir, '_config.yml')
@@ -22,7 +23,7 @@ class Template(object):
 
             macro_file = join(path, 'template.py')
             if exists(macro_file):
-                self.macros = self._load_macros(macro_file)
+                self.filters, self.vars_decor = self._load_macros(macro_file)
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
@@ -32,11 +33,15 @@ class Template(object):
         self.config.merge(template.config)
         self.parameters.update(template.parameters)
         self.paths += template.paths
-        self.macros.update(template.macros)
+        self.filters.update(template.filters)
+        self.vars_decor.update(template.vars_decor)
 
     def _load_macros(self, macro_file):
         macro = imp.load_source('macro', macro_file)
-        return macro.exports
+        filters = getattr(macro, 'filters', {})
+        vars_decor = getattr(macro, 'vars_decor', {})
+
+        return filters, vars_decor
 
 
 class TemplateConfig(object):
