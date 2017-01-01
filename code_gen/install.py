@@ -77,7 +77,8 @@ class DependencyInstaller(object):
             dependency_data_file = join(self.path, 'template/data', dependency.name + '.yml')
             print(dependency_data_file)
 
-            yaml_utils.write(dependency_data_file, data)
+            if not exists(dependency_data_file):
+                yaml_utils.write(dependency_data_file, data)
 
     def _in_code_gen(self, dependency):
         return exists(join(self.install_dir, dependency.name))
