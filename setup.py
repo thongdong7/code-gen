@@ -4,8 +4,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='zander',
-    version='0.1.0.dev',
-    description='Code Gen',
+    version='0.0.1',
+    description='Code Generator',
     author='Thong Dong',
     author_email='thongdong7@gmail.com',
     url='https://github.com/thongdong7/code-gen',
