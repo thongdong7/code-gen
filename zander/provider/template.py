@@ -1,10 +1,10 @@
 # encoding=utf-8
 from os.path import join, exists
 
-from code_gen.exception.package_config import InvalidCodeGenDependencyError
-from code_gen.model.template import Template
-from code_gen.utils import package_config_utils
-from code_gen.utils.package_config_utils import get_install_dir
+from zander.exception.package_config import InvalidCodeGenDependencyError
+from zander.model.template import Template
+from zander.utils import package_config_utils
+from zander.utils.package_config_utils import get_install_dir
 
 
 class TemplateProvider(object):
@@ -37,3 +37,12 @@ class TemplateProvider(object):
             template.merge(master_template)
 
         return template
+
+    def get_dependency(self, name):
+        install_dir = get_install_dir(project_dir=None)
+
+        dependency_path = join(install_dir, name)
+        if not exists(dependency_path):
+            raise InvalidCodeGenDependencyError(name, dependency_path)
+
+        return Template(dependency_path)

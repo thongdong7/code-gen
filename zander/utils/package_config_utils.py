@@ -1,8 +1,8 @@
 from os.path import join, exists, expanduser, abspath
 
-from code_gen.exception.package_config import MissPackageFileError
-from code_gen.model.package_config import PackageConfig
-from code_gen.utils import yaml_utils
+from zander.exception.package_config import MissPackageFileError
+from zander.model.package_config import PackageConfig
+from zander.utils import yaml_utils
 
 
 def load(path):

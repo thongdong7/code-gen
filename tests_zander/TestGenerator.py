@@ -2,8 +2,8 @@ import shutil
 from os import makedirs
 from os.path import exists, join
 
-from code_gen.generator import CodeGenerator
-from code_gen.utils import io_utils
+from zander.generator import CodeGenerator
+from zander.utils import io_utils
 from .bootstrap import get_data_dir
 
 __author__ = 'johnsmith'
