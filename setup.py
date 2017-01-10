@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='code-gen',
+    name='zander',
     version='0.1.0.dev',
     description='Code Gen',
     author='Thong Dong',
@@ -25,7 +25,7 @@ setup(
     # },
     entry_points={
         'console_scripts': [
-            'code-gen=code_gen.scripts:cli',
+            'zander=zander.scripts:cli',
         ],
     },
     include_package_data=True,

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -ex
 
-TARGET=dist/code-gen-$(uname -s)-$(uname -m)
+TARGET=dist/zander-$(uname -s)-$(uname -m)
 
 ./venv/bin/pip install -e .
-./venv/bin/pyinstaller code-gen.spec
+./venv/bin/pyinstaller zander.spec
 mv dist/code-gen $TARGET

@@ -3,13 +3,13 @@ import subprocess
 from os import makedirs, symlink, unlink
 from os.path import join, exists, pardir, abspath
 
-from code_gen.init import generate_template_structure
-from code_gen.model.template import Template
-from code_gen.provider.template import TemplateProvider
-from code_gen.template_engine import TemplateEngine
-from code_gen.utils import package_config_utils
-from code_gen.utils import yaml_utils
-from code_gen.utils.package_config_utils import get_install_dir
+from zander.init import generate_template_structure
+from zander.model.template import Template
+from zander.provider.template import TemplateProvider
+from zander.template_engine import TemplateEngine
+from zander.utils import package_config_utils
+from zander.utils import yaml_utils
+from zander.utils.package_config_utils import get_install_dir
 
 
 class InvalidDependencyError(Exception):

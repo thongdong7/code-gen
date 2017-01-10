@@ -4,11 +4,11 @@ from os.path import join, exists, abspath
 
 from tornado.gen import sleep
 
-from code_gen.monitor import FileMonitor, FileMonitorPool
-from code_gen.provider.template import TemplateProvider
-from code_gen.renderer import Renderer
-from code_gen.template_engine import TemplateEngine
-from code_gen.utils.template_utils import generate
+from zander.monitor import FileMonitor, FileMonitorPool
+from zander.provider.template import TemplateProvider
+from zander.renderer import Renderer
+from zander.template_engine import TemplateEngine
+from zander.utils.template_utils import generate
 
 
 class CodeGenerator(object):

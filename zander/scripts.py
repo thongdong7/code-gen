@@ -5,10 +5,10 @@ from os.path import exists
 import click
 import sys
 
-from code_gen.generator import CodeGenerator
-from code_gen.init import InitTemplate
-from code_gen.install import DependencyInstaller
-from code_gen.utils.cli_utils import print_exception
+from zander.generator import CodeGenerator
+from zander.init import InitTemplate
+from zander.install import DependencyInstaller
+from zander.utils.cli_utils import print_exception
 
 logging.basicConfig(level=logging.DEBUG)
 

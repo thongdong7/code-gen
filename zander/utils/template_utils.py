@@ -6,8 +6,8 @@ from os import walk, makedirs
 from os.path import join, relpath, dirname, exists, abspath, basename, splitext
 
 import yaml
-from code_gen.utils.transform_utils import transform
-from code_gen.utils.yaml_utils import load_dir
+from zander.utils.transform_utils import transform
+from zander.utils.yaml_utils import load_dir
 from jinja2 import Environment
 from jinja2.exceptions import UndefinedError, TemplateSyntaxError
 
@@ -26,39 +26,58 @@ class GenerateError(Exception):
     pass
 
 
-def generate(template_dir, params, output_dir, override=False, engine=None):
-    for root, subdirs, files in walk(template_dir):
-        relative_root_dir = relpath(root, template_dir)
+def iterate_dir(path):
+    for root, sub_dirs, files in walk(path):
+        relative_root_dir = relpath(root, path)
         if relative_root_dir == '.':
             relative_root_dir = ''
-        # print(relative_root_dir, root, subdirs, files)
+
         for file_name in files:
             template_path = join(root, file_name)
-            output_template_path = join(output_dir, relative_root_dir, file_name)
-            # print(output_template_path)
+            yield template_path, file_name, relative_root_dir
 
-            if not engine:
-                logging.warning('Need to provide `enginer')
-                output_path = env.from_string(output_template_path).render(**params)
-            else:
-                output_path = engine.render(output_template_path, **params)
-            # print(output_path)
 
-            if exists(output_path) and not _could_override([output_template_path, output_path], override):
-                print('Ignore', output_path)
-                continue
+def generate(template_dir, params, output_dir, **kwargs):
+    for path, file_name, relative_root_dir in iterate_dir(template_dir):
+        generate_file(path, relative_root_dir, params, output_dir, **kwargs)
 
-            tmp_output_dir = dirname(output_path)
-            if not exists(tmp_output_dir):
-                makedirs(tmp_output_dir)
 
-            try:
-                content = generate_content(template_path, params, engine=engine)
-            except UndefinedError as e:
-                logging.warning('%s: %s' % (template_path, str(e)))
-                continue
+def generate_file(template_path, relative_root_dir, params, output_dir, **kwargs):
+    file_name = basename(template_path)
+    include = kwargs.get('include')
+    if include:
+        relative_file = join(relative_root_dir, file_name)
+        if relative_file not in include:
+            print('Ignore file {relative_file} as not in {include}'.format(**locals()))
+            return
 
-            open(output_path, 'w').write(content)
+    output_template_path = join(output_dir, relative_root_dir, file_name)
+    # print(output_template_path)
+
+    override = kwargs.get('override', False)
+    engine = kwargs.get('engine')
+    if not engine:
+        logging.warning('Need to provide `engine')
+        output_path = env.from_string(output_template_path).render(**params)
+    else:
+        output_path = engine.render(output_template_path, **params)
+    # print(output_path)
+
+    if exists(output_path) and not _could_override([output_template_path, output_path], override):
+        print('Ignore', output_path)
+        return
+
+    tmp_output_dir = dirname(output_path)
+    if not exists(tmp_output_dir):
+        makedirs(tmp_output_dir)
+
+    try:
+        content = generate_content(template_path, params, engine=engine)
+    except UndefinedError as e:
+        logging.warning('%s: %s' % (template_path, str(e)))
+        return
+
+    open(output_path, 'w').write(content)
 
 
 generated_file_note_map = {

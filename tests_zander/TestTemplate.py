@@ -3,8 +3,8 @@ import logging
 import unittest
 from pprint import pprint
 
-from code_gen.model.template import Template
-from code_gen.provider.template import TemplateProvider
+from zander.model.template import Template
+from zander.provider.template import TemplateProvider
 from .bootstrap import get_data_dir
 
 __author__ = 'hiepsimu'

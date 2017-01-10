@@ -2,7 +2,7 @@
 import imp
 from os.path import join, exists
 
-from code_gen.utils import yaml_utils
+from zander.utils import yaml_utils
 
 
 class Template(object):
@@ -60,6 +60,10 @@ class TemplateConfig(object):
     @property
     def override(self):
         return self.data.get('override', [])
+
+    @override.setter
+    def override(self, value):
+        self.data['override'] = value
 
     def merge(self, template_config):
         for field in self.list_fields:
