@@ -1,1 +1,1 @@
-recursive-include code_gen/data *
+recursive-include zander/data *
