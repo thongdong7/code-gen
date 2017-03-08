@@ -64,7 +64,8 @@ def generate_file(template_path, relative_root_dir, params, output_dir, **kwargs
     # print(output_path)
 
     if exists(output_path) and not _could_override([output_template_path, output_path], override):
-        print('Ignore', output_path)
+        print('Ignore %s' % output_path)
+        # print('because %s' % output_template_path)
         return
 
     tmp_output_dir = dirname(output_path)

@@ -25,7 +25,7 @@ class CodeGenerator(object):
 
         if watch:
             file_monitor = FileMonitor(self._on_change)
-            print('Watch folders', self.template.paths)
+            print('Watch folders %s' % ' and '.join(self.template.paths))
             file_monitor.watch_multiple(self.template.paths)
 
             pool = FileMonitorPool()
