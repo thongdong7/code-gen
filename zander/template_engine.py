@@ -7,7 +7,9 @@ from jinja2 import Environment
 
 class TemplateEngine(object):
     def __init__(self, template, project_dir):
-        self.env = Environment()
+        self.env = Environment(
+            extensions=['jinja2.ext.do']
+        )
         self.env.line_statement_prefix = '##'
 
         def to_json(value):
