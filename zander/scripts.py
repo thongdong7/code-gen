@@ -41,7 +41,7 @@ def cli(ctx, app_dir, watch, debug):
         try:
             generator = get_generator(app_dir)
             generator.generate(watch=watch)
-            print('Done!')
+            # print('Done!')
         except Exception as e:
             print_exception(e, debug=debug)
 

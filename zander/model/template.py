@@ -47,7 +47,7 @@ class Template(object):
 
 
 class TemplateConfig(object):
-    list_fields = ['override']
+    list_fields = ['override', 'postcmd']
 
     def __init__(self, data):
         if not data:
@@ -64,6 +64,10 @@ class TemplateConfig(object):
     @override.setter
     def override(self, value):
         self.data['override'] = value
+
+    @property
+    def postcmd(self):
+        return self.data.get('postcmd', [])
 
     def merge(self, template_config):
         for field in self.list_fields:

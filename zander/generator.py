@@ -8,6 +8,7 @@ from zander.monitor import FileMonitor, FileMonitorPool
 from zander.provider.template import TemplateProvider
 from zander.renderer import Renderer
 from zander.template_engine import TemplateEngine
+from zander.utils.cmd_utils import execute_cmds
 from zander.utils.template_utils import generate
 
 
@@ -40,7 +41,6 @@ class CodeGenerator(object):
         self._generate()
 
     def _generate(self):
-        print('Generating...')
         # Reload parameters
         self.template = TemplateProvider().get(self.project_dir)
 
@@ -67,13 +67,12 @@ class CodeGenerator(object):
                                  override=self.template.config.override,
                                  engine=engine)
 
-        # TODO Generate items
-        print('Done!')
+        # Run postcmd
+        execute_cmds(self.template.config.postcmd)
 
     def _generate_master(self, engine, params):
-
         for path in self.template.paths:
-            print('  > %s' % path)
+            # print('  > %s' % path)
             template_dir = join(path, 'master')
             if not exists(template_dir):
                 continue
