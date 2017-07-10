@@ -43,6 +43,7 @@ def cli(ctx, app_dir, watch, debug):
             generator.generate(watch=watch)
             # print('Done!')
         except Exception as e:
+            logging.exception(e)
             print_exception(e, debug=debug)
 
             sys.exit(1)
@@ -94,3 +95,6 @@ def init(template_name, app_dir):
 #     except Exception as e:
 #         print(str(e))
 #         raise
+
+if __name__ == '__main__':
+    cli()

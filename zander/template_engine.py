@@ -7,6 +7,7 @@ from jinja2 import Environment
 
 class TemplateEngine(object):
     def __init__(self, template, project_dir):
+        self.macro = template.macro
         self.env = Environment(
             extensions=['jinja2.ext.do']
         )
@@ -17,30 +18,29 @@ class TemplateEngine(object):
 
         self.env.filters['tojson'] = to_json
 
-        self.env.filters.update(template.filters)
+        self.env.filters.update(self.macro.filters)
 
         self.env.globals['project_dir'] = project_dir
         self.env.globals['project_name'] = basename(project_dir)
 
-        # Build more vars
-        # print(template.filters)
-        # print(template.vars_decor)
-        params = {}
-        for var_name in template.vars_decor:
-            var_decor = template.vars_decor[var_name]
-            value = var_decor(self.env.globals)
-            params[var_name] = value
-
-        # print(params)
-
-        self.env.globals.update(params)
-
-        # print('macros', template.filters)
-        # print('lib_name', self.render('{{lib_name}}', abc='a-b-c'))
+        # Register filter
 
     @property
     def default_params(self):
         return self.env.globals
+
+    def decor_params(self, params):
+        # decor
+        for param_name in self.macro.params_decors:
+            # print(param_name)
+            param_decor_method = self.macro.params_decors[param_name]
+            params[param_name] = param_decor_method(params[param_name])
+
+        # create var
+        for method in self.macro.create_vars:
+            params.update(method(params))
+
+        return params
 
     def render(self, content, **params):
         return self.env.from_string(content).render(**params)

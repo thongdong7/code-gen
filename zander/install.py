@@ -58,18 +58,19 @@ class DependencyInstaller(object):
             else:
                 raise InvalidDependencyError(dependency)
 
-            dependency_install_dir = join(self.install_dir, dependency.name)
+            # Temporarily disable install script when install dependency
+            # dependency_install_dir = join(self.install_dir, dependency.name)
 
-            template = Template(dependency_install_dir)
+            # template = Template(dependency_install_dir)
 
-            engine = TemplateEngine(template, project_dir=self.path)
+            # engine = TemplateEngine(template, project_dir=self.path)
 
             # Load _install() method of dependency if any
-            if template.install:
-                ret = template.install(engine.default_params)
-                print(ret)
-
-                self._build_data(dependency, ret)
+            # if template.macro.install:
+            #     ret = template.macro.install(engine.default_params)
+            #     print(ret)
+            #
+            #     self._build_data(dependency, ret)
 
     def _build_data(self, dependency, ret):
         data = ret.get('data')

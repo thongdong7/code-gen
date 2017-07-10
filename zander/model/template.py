@@ -5,11 +5,32 @@ from os.path import join, exists
 from zander.utils import yaml_utils
 
 
+class Macro(object):
+    def __init__(self):
+        # Install scripts when install dependency
+        self.install = []
+
+        # jinja filter
+        self.filters = {}
+
+        # Add new vars to jinja global
+        self.create_vars = []
+
+        # Change the params before pass to template
+        self.params_decors = {}
+
+    def merge(self, other):
+        # type: (Macro) -> None
+        self.install += other.install
+        self.filters.update(other.filters)
+        self.create_vars += other.create_vars
+        self.params_decors.update(other.params_decors)
+
+
 class Template(object):
     def __init__(self, path=None):
-        self.filters = {}
-        self.vars_decor = {}
-        self.install = None
+        self.macro = Macro()
+
         if path:
             data_dir = join(path, 'data')
             config_file = join(data_dir, '_config.yml')
@@ -24,7 +45,7 @@ class Template(object):
 
             macro_file = join(path, 'template.py')
             if exists(macro_file):
-                self.install, self.filters, self.vars_decor = self._load_macros(macro_file)
+                self._load_macros(macro_file, self.macro)
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
@@ -34,16 +55,30 @@ class Template(object):
         self.config.merge(template.config)
         self.parameters.update(template.parameters)
         self.paths += template.paths
-        self.filters.update(template.filters)
-        self.vars_decor.update(template.vars_decor)
 
-    def _load_macros(self, macro_file):
-        macro = imp.load_source('macro', macro_file)
-        install = getattr(macro, '_install', None)
-        filters = getattr(macro, 'filters', {})
-        vars_decor = getattr(macro, 'vars_decor', {})
+        self.macro.merge(template.macro)
 
-        return install, filters, vars_decor
+    def _load_macros(self, macro_file, macro):
+        # print('load macro', macro_file)
+        template_module = imp.load_source('macro', macro_file)
+
+        create_var_prefix = 'create_var_'
+        for item in dir(template_module):
+            if item.startswith(create_var_prefix):
+                macro.create_vars.append(getattr(template_module, item))
+
+        filter_prefix = 'filter_'
+        for item in dir(template_module):
+            if item.startswith(filter_prefix):
+                filter_name = item[len(filter_prefix):]
+
+                macro.filters[filter_name] = getattr(template_module, item)
+
+        install = getattr(template_module, '_install', None)
+        if install:
+            macro.install.append(install)
+
+        macro.params_decors = getattr(template_module, 'params_decors', {})
 
 
 class TemplateConfig(object):

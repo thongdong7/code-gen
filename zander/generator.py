@@ -15,7 +15,7 @@ from zander.utils.template_utils import generate
 class CodeGenerator(object):
     def __init__(self, project_dir, output_dir):
         self.project_dir = abspath(project_dir)
-        self.template = TemplateProvider().get(project_dir)
+        self.template = TemplateProvider().get(self.project_dir)
         self.output_dir = output_dir
 
         #
@@ -38,16 +38,20 @@ class CodeGenerator(object):
 
     def _on_change(self, path):
         print('%s changed' % path)
-        self._generate()
+        self._generate(reload=True)
 
-    def _generate(self):
-        # Reload parameters
-        self.template = TemplateProvider().get(self.project_dir)
+    def _generate(self, reload=False):
+        if reload:
+            # Reload parameters
+            self.template = TemplateProvider().get(self.project_dir)
 
         # TODO Check changed path to decide to reload parameters or not
         params = self.template.parameters
 
         engine = TemplateEngine(self.template, project_dir=self.project_dir)
+
+        # Call params decor
+        params = engine.decor_params(params)
 
         # Generate master
         self._generate_master(engine, params)
