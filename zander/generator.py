@@ -62,8 +62,16 @@ class CodeGenerator(object):
                 item_dir = join(path, 'items', item_name)
                 if exists(item_dir):
                     for item_config in params[item_name]:
-                        item_params = copy(item_config)
-                        item_params['params'] = params
+                        item_params = {
+                            'params': params,
+                        }
+
+                        if isinstance(item_config, dict):
+                            item_params.update(item_config)
+                        else:
+                            # Item config is an object
+                            for field in item_config.__dict__.keys():
+                                item_params[field] = getattr(item_config, field)
 
                         generate(template_dir=item_dir,
                                  params=item_params,

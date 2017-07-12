@@ -43,9 +43,7 @@ class Template(object):
             self.parameters = yaml_utils.load_dir(data_dir)
             self.paths = [path]
 
-            macro_file = join(path, 'template.py')
-            if exists(macro_file):
-                self._load_macros(macro_file, self.macro)
+            self._load_macros(path, self.macro)
         else:
             self.config = TemplateConfig({})
             self.parameters = {}
@@ -58,9 +56,13 @@ class Template(object):
 
         self.macro.merge(template.macro)
 
-    def _load_macros(self, macro_file, macro):
-        # print('load macro', macro_file)
-        template_module = imp.load_source('macro', macro_file)
+    def _load_macros(self, path, macro):
+        if exists(join(path, 'macro/__init__.py')) or exists(join(path, 'macro.py')):
+            f, filename, description = imp.find_module('macro', [path])
+
+            template_module = imp.load_module('macro', f, filename, description)
+        else:
+            return
 
         create_var_prefix = 'create_var_'
         for item in dir(template_module):

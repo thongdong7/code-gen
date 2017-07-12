@@ -124,6 +124,9 @@ def generate_content(template_file_path, params, engine=None):
 
     except TemplateSyntaxError as e:
         raise GenerateError(template_file_path, str(e))
+    except Exception as e:
+        raise GenerateError(template_file_path, str(e))
+
 
 
 def _could_override(paths, override):
