@@ -1,7 +1,7 @@
 # encoding=utf-8
 import json
 from os.path import basename
-
+import pprint
 from jinja2 import Environment
 
 
@@ -16,7 +16,11 @@ class TemplateEngine(object):
         def to_json(value):
             return json.dumps(value, indent=4, sort_keys=True)
 
+        def _pprint(value, margin=0):
+            return pprint.pformat(value, indent=2).replace('\n', '\n' + ' ' * margin)
+
         self.env.filters['tojson'] = to_json
+        self.env.filters['pprint'] = _pprint
 
         self.env.filters.update(self.macro.filters)
 

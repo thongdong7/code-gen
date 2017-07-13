@@ -1,6 +1,7 @@
 # encoding=utf-8
-from copy import copy
-from os.path import join, exists, abspath
+import os
+import subprocess
+from os.path import join, exists, abspath, dirname
 
 from tornado.gen import sleep
 
@@ -15,7 +16,7 @@ from zander.utils.template_utils import generate
 class CodeGenerator(object):
     def __init__(self, project_dir, output_dir):
         self.project_dir = abspath(project_dir)
-        self.template = TemplateProvider().get(self.project_dir)
+        self.template = None
         self.output_dir = output_dir
 
         #
@@ -38,10 +39,17 @@ class CodeGenerator(object):
 
     def _on_change(self, path):
         print('%s changed' % path)
-        self._generate(reload=True)
+
+        # Run a process to generate instead of call self._generate(reload=True) to avoid macro catch issue
+        current_dir = abspath(dirname(__file__))
+        script_file = join(current_dir, 'scripts.py')
+
+        subprocess.Popen(["python", script_file], env=os.environ)
+        # print('aaa')
+        # self._generate(reload=True)
 
     def _generate(self, reload=False):
-        if reload:
+        if reload or not self.template:
             # Reload parameters
             self.template = TemplateProvider().get(self.project_dir)
 

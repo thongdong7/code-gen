@@ -36,6 +36,10 @@ class FileMonitor:
             f = []
             for (dirpath, dirnames, filenames) in walk(path):
                 for filename in filenames:
+                    if filename.endswith('.pyc'):
+                        # Ignore pyc file as it will be trigger 2 times when change .py file
+                        continue
+
                     f.append(join(dirpath, filename))
                 # f.extend(filenames)
             # print f
