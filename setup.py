@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='zander',
-    version='0.0.10',
+    version='0.0.12',
     description='Code Generator',
     author='Thong Dong',
     author_email='thongdong7@gmail.com',
@@ -14,7 +14,7 @@ setup(
         'pyyaml',
         'click==6.6',
         'jinja2==2.8',
-        'pyfunctional==0.8.0',
+        'pyfunctional',
         'tornado==4.4.2',
     ],
     # extras_require={
