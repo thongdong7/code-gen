@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='zander',
-    version='0.0.13',
+    version='0.0.14',
     description='Code Generator',
     author='Thong Dong',
     author_email='thongdong7@gmail.com',
