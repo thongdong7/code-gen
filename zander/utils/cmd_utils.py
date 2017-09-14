@@ -2,9 +2,15 @@
 import os
 import shlex
 import subprocess
+from os.path import expanduser
+
+home = expanduser("~")
 
 
 def execute_cmd(cmd, cwd=None, env=None):
+    if cmd.startswith('~/'):
+        cmd = cmd.replace('~/', '%s/' % home)
+
     print(cmd)
     my_env = os.environ.copy()
 
