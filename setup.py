@@ -13,7 +13,7 @@ setup(
     install_requires=[
         'pyyaml',
         'click==6.6',
-        'jinja2==2.8',
+        'jinja2==2.11.3',
         'pyfunctional',
         'tornado==4.4.2',
     ],
